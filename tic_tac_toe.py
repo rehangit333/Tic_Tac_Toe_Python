@@ -44,6 +44,14 @@ def load_game():
     except FileNotFoundError:
         print("No saved game found. Starting a new game.")
         return [["-", "-", "-"] for _ in range(3)], "X"
+    except IndexError:
+        print("Corrupted game state. Starting a new game.")
+        return [["-", "-", "-"] for _ in range(3)], "X"
+
+# Reset the game state to the initial state
+def reset_game_state():
+    with open("game_state.txt", "w") as file:
+        file.write("")
 
 # Main game loop
 def main():
@@ -63,10 +71,14 @@ def main():
                 if check_win(board):
                     display_board(board)
                     print(f"Player {current_player} wins!")
+                    reset_game_state()
+                    print("Game has been reset to the initial state.")
                     break
                 elif check_draw(board):
                     display_board(board)
                     print("It's a draw!")
+                    reset_game_state()
+                    print("Game has been reset to the initial state.")
                     break
                 current_player = "O" if current_player == "X" else "X"
             else:
